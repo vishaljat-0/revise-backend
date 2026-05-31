@@ -84,3 +84,10 @@ input{
   padding: 5px 10px;
   cursor: pointer;
 }
+.btndiv{
+   height: 100% ;
+   width: 100%;
+   display: flex;
+   justify-content: space-between;
+   padding: 10px;
+}

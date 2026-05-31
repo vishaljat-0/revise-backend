@@ -3,25 +3,51 @@ import axios from "axios";
 
 function App() {
   const [notes, setnotes] = useState([]);
+  const [title, setTitle] = useState("");
+  const [editId, setEditId] = useState(null);
+  const [description, setDescription] = useState("");
 
   const getData = async () => {
     const res = await axios.get("http://localhost:3000/api/get");
     setnotes(res.data.notes);
     console.log(res.data.notes);
   };
+
+  const editbtn = async (note) => {
+    setEditId(note._id);
+    setTitle(note.title);
+    setDescription(note.description);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { title, description } = e.target.elements;
+    if (editId) {
+      axios
+        .patch(`http://localhost:3000/api/update/${editId}`, {
+          title: title,
+          description: description,
+        })
+        .then((res) => {
+          console.log(res.data);  
+          getData();
+        });
+      setEditId(null);
+      return;
+    }
+
+    // POST request
+
     axios
       .post("http://localhost:3000/api/post", {
-        title: title.value,
-        description: description.value,
+        title,
+        description
       })
       .then((res) => {
         console.log(res.data);
         getData();
       });
-    console.log(title.value, description.value);
+
+   
   };
   const dltfn = async (e) => {
     console.log(e);
@@ -38,8 +64,16 @@ function App() {
   return (
     <div className="app">
       <form onSubmit={handleSubmit}>
-        <input name="title" type="text" placeholder="Enter note title..." />
         <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          name="title"
+          type="text"
+          placeholder="Enter note title..."
+        />
+        <input
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           name="description"
           type="text"
           placeholder="Enter note description..."
@@ -52,9 +86,14 @@ function App() {
           <div className="card" key={note._id}>
             <h1>{note.title}</h1>
             <p>{note.description}</p>
-            <button onClick={() => dltfn(note._id)} id="btndlt">
-              Delete
-            </button>
+            <div className="btndiv">
+              <button onClick={() => dltfn(note._id)} id="btndlt">
+                Delete
+              </button>
+              <button onClick={() => editbtn(note)} id="btndlt">
+                Edit
+              </button>
+            </div>
           </div>
         );
       })}
