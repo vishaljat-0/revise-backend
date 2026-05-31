@@ -14,24 +14,31 @@ function App() {
   };
 
   const editbtn = async (note) => {
+    alert("Edit clicked!"); // ← yeh dikhta hai?
+    console.log("Edit Clicked", note);
     setEditId(note._id);
     setTitle(note.title);
     setDescription(note.description);
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (editId) {
+      console.log("Sending title:", title); // ← yeh kya print hota hai?
+      console.log("Sending description:", description);
       axios
         .patch(`http://localhost:3000/api/update/${editId}`, {
-          title: title,
-          description: description,
+          title,
+          description,
         })
         .then((res) => {
-          console.log(res.data);  
+          console.log(res.data);
+          setTitle("");
+          setDescription("");
+          setEditId(null);
           getData();
         });
-      setEditId(null);
       return;
     }
 
@@ -40,14 +47,14 @@ function App() {
     axios
       .post("http://localhost:3000/api/post", {
         title,
-        description
+        description,
       })
       .then((res) => {
         console.log(res.data);
+        setTitle("");
+        setDescription("");
         getData();
       });
-
-   
   };
   const dltfn = async (e) => {
     console.log(e);
@@ -78,7 +85,7 @@ function App() {
           type="text"
           placeholder="Enter note description..."
         />
-        <button>Save Note</button>
+        <button type="submit">Save Note</button>
       </form>
 
       {notes.map((note) => {
@@ -90,7 +97,7 @@ function App() {
               <button onClick={() => dltfn(note._id)} id="btndlt">
                 Delete
               </button>
-              <button onClick={() => editbtn(note)} id="btndlt">
+              <button type="button" onClick={() => editbtn(note)} id="btndlt">
                 Edit
               </button>
             </div>
