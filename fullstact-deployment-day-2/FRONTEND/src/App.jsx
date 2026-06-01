@@ -8,7 +8,8 @@ function App() {
   const [description, setDescription] = useState("");
 
   const getData = async () => {
-    const res = await axios.get("http://localhost:3000/api/get");
+    const res = await axios.get("/api/get")
+
     setnotes(res.data.notes);
     console.log(res.data.notes);
   };
@@ -27,8 +28,7 @@ function App() {
     if (editId) {
       console.log("Sending title:", title); // ← yeh kya print hota hai?
       console.log("Sending description:", description);
-      axios
-        .patch(`http://localhost:3000/api/update/${editId}`, {
+     axios.patch(`/api/update/${editId}`, {
           title,
           description,
         })
@@ -44,8 +44,7 @@ function App() {
 
     // POST request
 
-    axios
-      .post("http://localhost:3000/api/post", {
+   axios.post("/api/post", {
         title,
         description,
       })
@@ -58,7 +57,7 @@ function App() {
   };
   const dltfn = async (e) => {
     console.log(e);
-    axios.delete(`http://localhost:3000/api/delete/${e}`).then((res) => {
+  axios.delete(`/api/delete/${e}`).then((res) => {
       console.log(res.data);
       getData();
     });
