@@ -9,11 +9,11 @@ const postSchema= new mongoose.Schema({
         required:[true,"Post image is required"]
     },
     user:{
-        ref:Users,
+        ref:"user",
         type:mongoose.Schema.Types.ObjectId,
         required:[true,"User is required"]
 
-    }
+    }   
 
 })
 
