@@ -5,8 +5,7 @@ const multer = require("multer");
 const jwt = require("jsonwebtoken");
 const postModel = require("../models/post.model");
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+
 
 // const client = new ImageKit({
 //   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
@@ -21,22 +20,11 @@ cloudinary.config({
 });
 
 const postController = async (req, res) => {
-  const token = req.cookies.token;
-  if (!token) {
-    return res.status(401).json({
-      success: false,
-      message: "Unauthorized access ,token not found",
-    });
-  }
-  let decoded = null;
-  try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-  } catch (error) {
-    return res.status(401).json({
-      success: false,
-      message: "Unauthorized access ,token invalid",
-    });
-  }
+
+
+  const userId = req.user.id;
+  console.log(userId);
+
 
   // const file = await client.upload({
   //   file: req.file.buffer.toString("base64"),
@@ -53,8 +41,8 @@ const postController = async (req, res) => {
 
   const post = await postModel.create({
     caption: req.body.caption,
-    imgUrl: file.secure_url || file.url,
-    user: decoded.id,
+    imgUrl: file.secure_url,
+    user: userId,
   });
   res.status(201).json({
     success: true,
@@ -63,6 +51,44 @@ const postController = async (req, res) => {
   });
 };
 
+const getPostController = async (req, res) => {
+  const user = req.user.id;
+  const posts = await postModel.find({ user: user });
+
+  res.status(200).json({
+    success: true,
+    message: "Posts fetched successfully",
+    data: posts,
+  });
+};
+const getDetailedPostController = async (req, res) => {
+  const userId = req.user.id;
+  const postId = req.params.postId;
+
+  const post = await postModel.findById(postId);
+  if (!post) {
+    return res.status(404).json({
+      success: false,
+      message: "Post not found",
+    });
+  }
+  const isvaliduser = post.user.toString() === userId;
+  if (!isvaliduser) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized access",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Post fetched successfully",
+    data: post,
+  });
+};
+
 module.exports = {
   postController,
+  getPostController,
+  getDetailedPostController,
 };
