@@ -1,4 +1,5 @@
 const followModel = require("../models/follow.model");
+const userModel = require("../models/userModel");
 
 const followController = async (req, res) => {
   try {
@@ -21,6 +22,7 @@ const followController = async (req, res) => {
     const isfollowing = await followModel.findOne({
       follower: followerId,
       following: followingId,
+      status:"accepted"
     });
     if (isfollowing) {
       return res.status(400).json({
@@ -31,7 +33,9 @@ const followController = async (req, res) => {
     let followRecord = await followModel.create({
       follower: followerId,
       following: followingId,
+      status:"accepted"
     });
+    
 
     await followRecord.populate([
       { path: "follower", select: "username" },
@@ -42,6 +46,8 @@ const followController = async (req, res) => {
       success: true,
       message: `Followed successfully you are following  ${followRecord.following.username}.`,
       data: followRecord,
+
+      
     });
   } catch (error) {
     res.status(500).json({
@@ -59,6 +65,7 @@ const unFollowController = async (req, res) => {
     const isFollows = await followModel.findOne({
       follower: followerId,
       following: followingId,
+      status:"accepted"
     });
 
     if (!isFollows) {
@@ -68,11 +75,17 @@ const unFollowController = async (req, res) => {
       });
     }
 
-    await followModel.findByIdAndDelete(isFollows._id);
+    await followModel.findOneAndDelete({
+      follower: followerId,
+      following: followingId,
+      status:"accepted"
+    });
+    
 
     res.status(200).json({
       success: true,
       message: "Unfollowed successfully",
+      
     });
   } catch (error) {
     res.status(500).json({

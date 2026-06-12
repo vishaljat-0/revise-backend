@@ -4,7 +4,7 @@ const cloudinary = require("cloudinary");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
 const postModel = require("../models/post.model");
-
+const likeModel = require("../models/like.model");
 
 
 // const client = new ImageKit({
@@ -20,11 +20,8 @@ cloudinary.config({
 });
 
 const postController = async (req, res) => {
-
-
   const userId = req.user.id;
   console.log(userId);
-
 
   // const file = await client.upload({
   //   file: req.file.buffer.toString("base64"),
@@ -86,9 +83,83 @@ const getDetailedPostController = async (req, res) => {
     data: post,
   });
 };
+const likeController = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const postId = req.params.postId;
+
+    const post = await postModel.findById(postId);
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
+    const alreadyLiked = await likeModel.findOne({
+      user: userId,
+      postId: postId,
+    });
+    if (alreadyLiked) {
+      return res.status(400).json({
+        success: false,
+        message: "Post already liked",
+      });
+    }
+    const like = await likeModel.create({
+      user: userId,
+      postId: postId,
+    });
+    await like.populate("user", "username");
+
+    res.status(200).json({
+      success: true,
+      message: `${like.user.username} liked this post`,
+      data: like,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Error: ${error.message}`,
+    });
+  }
+};
+const unLikeController = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const postId = req.params.postId;
+
+
+   const isliked= await likeModel.findOneAndDelete({
+       user:userId,
+       postId:postId
+   })
+  if(!isliked){
+    return res.status(404).json({
+        success:false,
+        message:"Post not found"
+    })
+  }
+
+
+
+    res.status(200).json({
+      success: true,
+      message: "Post unliked successfully",
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Error: ${error.message}`,
+    });
+
+  }
+};
 
 module.exports = {
   postController,
   getPostController,
   getDetailedPostController,
+  likeController,
+  unLikeController
 };
