@@ -33,19 +33,7 @@ const userSchema = new mongoose.Schema(
       default: "https://ik.imagekit.io/cerbsd0t6/insta_clone/default-avatar-profile-icon-of-social-media-user-photo-image-vector.webp",
     },
 
-    followers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-
-    following: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    
   },
   { timestamps: true }
 );
