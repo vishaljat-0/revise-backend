@@ -107,7 +107,25 @@ const loginController = async (req, res) => {
 
   } catch (error) {}
 };
+const getMeController=async(req,res)=>{
+    try {
+    const userId = req.user.id;
+       const username = await userModel.findById(userId);
+
+        res.status(200).json({
+            success: true,
+            message: "User fetched successfully",
+            data: username
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+          });
+    }
+}
 module.exports = {
   registerController,
   loginController,
+  getMeController,
 };

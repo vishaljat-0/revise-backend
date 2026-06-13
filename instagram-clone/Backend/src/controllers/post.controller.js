@@ -21,7 +21,6 @@ cloudinary.config({
 
 const postController = async (req, res) => {
   const userId = req.user.id;
-  console.log(userId);
 
   // const file = await client.upload({
   //   file: req.file.buffer.toString("base64"),

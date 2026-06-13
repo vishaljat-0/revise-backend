@@ -5,6 +5,7 @@ function Approutes() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<h1>Home</h1>} />
         <Route path="/Login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>
