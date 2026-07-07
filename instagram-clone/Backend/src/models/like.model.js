@@ -6,7 +6,7 @@ postId:{
     required:[true,"Post is required"]
 },
 user:{
-    ref:"user",
+    ref:"user", 
     type:mongoose.Schema.Types.ObjectId,
     required:[true,"User is required"]
 },

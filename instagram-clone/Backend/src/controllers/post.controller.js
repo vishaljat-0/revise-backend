@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken");
 const postModel = require("../models/post.model");
 const likeModel = require("../models/like.model");
 
-
 // const client = new ImageKit({
 //   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
 //   publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
@@ -127,38 +126,71 @@ const unLikeController = async (req, res) => {
     const userId = req.user.id;
     const postId = req.params.postId;
 
-
-   const isliked= await likeModel.findOneAndDelete({
-       user:userId,
-       postId:postId
-   })
-  if(!isliked){
-    return res.status(404).json({
-        success:false,
-        message:"Post not found"
-    })
-  }
-
-
+    const isliked = await likeModel.findOneAndDelete({
+      user: userId,
+      postId: postId,
+    });
+    if (!isliked) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
 
     res.status(200).json({
       success: true,
       message: "Post unliked successfully",
     });
 
+
+
   } catch (error) {
     res.status(500).json({
       success: false,
       message: `Error: ${error.message}`,
     });
-
   }
 };
+   const getFeedController=async(req,res)=>{
+     try {
+      const user = req.user
+        const posts=await Promise.all(( await postModel.find().populate("user").lean())
+      .map(async(post)=>{
+        const isliked =  await likeModel.findOne({
+          user:user.id,
+          postId:post._id
+        
+        })
+        post.isliked=Boolean(isliked)
+        return post
+      })
+      
+      
+      
+      
+      
+      
+      )
+
+
+      res.status(200).json({
+        success: true,
+        message: "Posts fetched successfully",
+        data: posts,
+      });
+     } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: `Error: ${error.message}`,
+      })
+     }
+    }
 
 module.exports = {
   postController,
   getPostController,
   getDetailedPostController,
   likeController,
-  unLikeController
+  unLikeController,
+  getFeedController,
 };
