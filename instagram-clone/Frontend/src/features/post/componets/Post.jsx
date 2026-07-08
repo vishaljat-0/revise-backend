@@ -1,7 +1,9 @@
 import React from "react";
+import { usePost } from "../hook/usePost";
 
-function Post({ user, post }) {
-  console.log(post);
+
+function Post({ user, post,loading,handleLikePost,handleUnlikePost }) {
+  
   
   return (
     <>
@@ -17,16 +19,17 @@ function Post({ user, post }) {
           <div className="icons">
            
         <span>
-  <i
+  <i 
     className={
       post.isliked
         ? "ri-heart-fill like"
         : "ri-heart-line"
     }
+    onClick={()=>{post.isliked ? handleUnlikePost(post._id):handleLikePost(post._id)}}
   ></i>
 </span>
          
-            <span>
+            <span >
               <i className="ri-chat-3-line"></i>
             </span>
             <span>
