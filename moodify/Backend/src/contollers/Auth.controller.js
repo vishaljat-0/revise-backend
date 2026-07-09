@@ -29,7 +29,7 @@ const registerController = async (req, res) => {
     password: hashPassword,
   });
 
-  const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
+  const token = await jwt.sign({ id: user._id ,username:user.username}, process.env.JWT_SECRET_KEY);
   res.cookie("token", token, { httpOnly: true });
 
   res.status(201).json({
@@ -41,7 +41,7 @@ const registerController = async (req, res) => {
 };
 
 const loginController = async (req, res) => {
-  const { email, password } = req.body;
+  const {username, email, password } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({
@@ -50,11 +50,16 @@ const loginController = async (req, res) => {
     });
   }
 
-  const user = await userModel.findOne({  email });
+  const user = await userModel.findOne({ 
+    $or:[
+      {email:email},
+      {username:username}
+    ]
+   });
   if (!user) {
     return res.status(400).json({
       success: false,
-      message: "User not found",
+      message: "Invalid credentials",
     });
   }
 
