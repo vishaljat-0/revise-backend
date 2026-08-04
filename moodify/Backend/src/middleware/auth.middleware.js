@@ -1,12 +1,14 @@
 const jwt = require("jsonwebtoken");
 const blackListModel = require("../model/blacklistModel");
+const Redis = require("../config/cache");
 
-const authMiddleware =async(req, res, next) => {
-
+const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
-  const tokenBlacklisted= await blackListModel.findOne({token})
+  const tokenBlacklisted = await Redis.get(token);
   if (tokenBlacklisted) {
-    return res.status(401).json({ success: false, message: "token blacklisted" });
+    return res
+      .status(401)
+      .json({ success: false, message: "token blacklisted" });
   }
 
   if (!token) {
@@ -14,15 +16,14 @@ const authMiddleware =async(req, res, next) => {
   }
   try {
     let decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    
+
     req.user = decodedToken;
 
     next();
   } catch (error) {
     console.log(error);
-    
-    return res.status(401).json({ success: false, message: "Unauthorized" });
 
+    return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 };
 
