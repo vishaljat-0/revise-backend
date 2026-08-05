@@ -15,8 +15,11 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "imagekit": "^6.0.0",
     "ioredis": "^6.0.0",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.7.4"
+    "mongoose": "^9.7.4",
+    "multer": "^2.2.0",
+    "node-id3": "^0.2.9"
   }
 }
