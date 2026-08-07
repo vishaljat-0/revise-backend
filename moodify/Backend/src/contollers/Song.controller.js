@@ -34,5 +34,7 @@ res.status(200).json({success:true,song:songs})
  export const getSongController=async(req,res)=>{
      const {mood}=req.query
      const songs=await songModel.find({mood})
-     res.status(200).json({success:true,songs})
+     const randomSong =
+  songs[Math.floor(Math.random() * songs.length)];
+     res.status(200).json({success:true,randomSong})
  }

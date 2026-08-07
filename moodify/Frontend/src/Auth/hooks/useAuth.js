@@ -8,10 +8,8 @@ import { useEffect } from "react"
     const context=useContext(Authcontext)
     const {user,setuser,loading,setloading}=context
     const handleregiter=async({username,email,password})=>{
-         console.log(username,email,password);
         setloading(true)
         const response = await register({username,email,password})
-        console.log(response);
         setuser(response.user.username)
         setloading(false)
 

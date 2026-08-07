@@ -7,7 +7,6 @@ export default function useFaceDetection() {
   const [loading, setLoading] = useState(false);
 
   const detectMood = async (videoRef) => {
-      console.log("✅ Hook detectMood called");
     if (!videoRef.current) return;
 
     try {
@@ -19,16 +18,22 @@ export default function useFaceDetection() {
         videoRef.current,
         performance.now(),
       );
-
-      console.log(results);
-console.log(results.faceBlendshapes);
-console.log(results.faceLandmarks);
+      if (
+  !results.faceBlendshapes ||
+  results.faceBlendshapes.length === 0
+) {
+  setMood("No Face Detected");
+  return null;
+}
 
       const detectedMood = getMood(results.faceBlendshapes);
       setMood(detectedMood);
+      return detectedMood;
     } catch (error) {
       console.error("Face Detection Error:", error);
       setMood("Detection Failed");
+
+      return null;
     } finally {
       setLoading(false);
     }

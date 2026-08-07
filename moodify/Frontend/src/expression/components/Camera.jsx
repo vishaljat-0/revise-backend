@@ -1,14 +1,12 @@
 import { useEffect, useRef } from "react";
 import useFaceDetection from "../hooks/useFaceDetection";
-
-
-
+import './camerastyle.scss'
+import { useHome } from "../../home/hooks/useHome";
 export default function Camera() {
-    const { mood, detectMood, loading } = useFaceDetection();
-    console.log("detectMood:", detectMood);
-console.log("type:", typeof detectMood);
+  const { mood, detectMood, loading } = useFaceDetection();
   const videoRef = useRef(null);
-  //   const [mood, setMood] = useState("Not Detected");
+  const { handlegetme } = useHome();
+
   useEffect(() => {
     let stream;
 
@@ -33,31 +31,42 @@ console.log("type:", typeof detectMood);
     };
   }, []);
 
-  return (
-    <div>
-      <h1>Moodify</h1>
+  const handleclick =() => {
+    detectMood(videoRef);
+  }
+   return (
+  <div className="camera">
+    <h1>Moodify</h1>
 
-      <h2>Mood: {mood}</h2>
+    <p className="subtitle">
+      Detect your mood and play matching music
+    </p>
 
+    <div className="camera__frame">
       <video
         ref={videoRef}
         autoPlay
         playsInline
         muted
-        width={640}
-        height={480}
       />
+    </div>
 
-      <br />
+    <div className="camera__mood">
+      Mood: <span>{mood}</span>
+    </div>
 
-<button
-  onClick={() => {
-    console.log("Button clicked");
-    console.log(typeof detectMood);
-    detectMood(videoRef);
-  }}
->
-  Detect Mood
-</button>    </div>
-  );
-}
+    <button
+      disabled={loading}
+      onClick={async () => {
+    const mood = await detectMood(videoRef);
+  if (!mood || mood === "Neutral") {
+    return;
+  }
+
+    await handlegetme({ mood });
+}}
+    >
+      {loading ? "Detecting..." : "Detect Mood"}
+    </button>
+  </div>
+)}
