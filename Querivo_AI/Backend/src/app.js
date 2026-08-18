@@ -9,7 +9,7 @@ import cors from 'cors';
 
 
 const app = express();
-testModel()
+// testModel()
 
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));

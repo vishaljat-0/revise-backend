@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "../Feature/Auth/Pages/Login";
 import Register from "../Feature/Auth/Pages/Register";
 import Protected from "./Protected";
-import Dashboard from "../Feature/pages/Dashboard";
+import Dashboard from "../Feature/Chat/pages/Dashboard";
 
 const AppRouter = () => {
   return (

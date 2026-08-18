@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hook/useAuth.js";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Login() {
   const { handlelogin } = useAuth();
@@ -9,10 +10,14 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const user = useSelector((state) => state.auth.user);
+  const loading = useSelector((state) => state.auth.loading);
   const [errors, setErrors] = useState({});
   const [submitMessage, setSubmitMessage] = useState("");
 
+  if(!loading && user){
+    navigate("/dashboard");
+  }
   const validate = () => {
     const nextErrors = {};
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,6 +60,7 @@ handlelogin(payload);
 navigate("/dashboard");
 console.log("after handlelogin");
   };
+  
 
   return (
     <div className="flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.18),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.16),transparent_32%),linear-gradient(135deg,#020617_0%,#0b1120_38%,#111827_100%)] px-4 py-4 text-slate-100">

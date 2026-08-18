@@ -14,6 +14,5 @@ async function testModel() {
   }
 }
 
-testModel();
 
 export default testModel;
