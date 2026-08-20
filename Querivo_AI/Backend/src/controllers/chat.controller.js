@@ -57,4 +57,38 @@ export const getMessageRes = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};  
+}
+
+
+    export const getChats = async (req, res, next) => {
+    try {
+      const chats = await ChatModel.find({ user: req.user.id });
+      return res.status(200).json({ success: true, data: chats });
+    } catch (error) {
+      next(error);
+    }
+    }
+
+     export const  getMessages=async(req,res,next)=>{
+       try {
+        const messages= await MessageModel.find({chat:req.params.chatId}).sort({createdAt:1})
+        return res.status(200).json({success:true,data:messages })
+       } catch (error) {
+        next(error);
+       }
+     }
+
+   export async function deleteChat(req, res,next) {
+
+    try {
+      await MessageModel.deleteMany({ chat: req.params.chatId });
+      await ChatModel.findByIdAndDelete(req.params.chatId);
+      return res.status(200).json({ message: "Chat deleted successfully", success: true });
+    } catch (error) {
+      next(error);
+    }
+
+
+
+
+   }
