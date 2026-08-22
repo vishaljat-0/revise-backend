@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useChat } from "../hooks/useChat";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 import {
   Search,
   Plus,
@@ -329,39 +332,89 @@ function HeroSearch({ query, setQuery, onSubmit, isLoading }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
+/* Thread view (chat messages)                                         */
+
 /* Thread view (chat messages)                                         */
 /* ------------------------------------------------------------------ */
 function ThreadView({ messages, query, onSubmit, setQuery, isLoading }) {
   return (
     <div className="flex flex-1 overflow-hidden">
       <div className="flex-1 overflow-y-auto px-8 py-8">
-        <div className="mx-auto flex max-w-170 flex-col gap-8">
+        <div className="mx-auto flex max-w-170 flex-col gap-6">
           {messages.map((m) =>
             m.role === "user" ? (
-              <h2
-                key={m.id}
-                className="font-display text-[22px] leading-snug text-[#F5F1E6]"
-              >
-                {m.content}
-              </h2>
-            ) : (
-              <div key={m.id}>
-                <p className="text-[15px] leading-[1.75] text-[#D6D7DC]">
+              <div key={m.id} className="flex justify-end">
+                <div className="max-w-[75%] rounded-2xl border border-[#2A2B31] bg-[#17181C] px-4 py-2.5 text-[14.5px] leading-relaxed text-[#EDEDEF]">
                   {m.content}
-                </p>
-                <div className="mt-5 flex items-center gap-1 border-b border-[#1F2024] pb-5 text-[#5C5D66]">
-                  <IconAction icon={Copy} />
-                  <IconAction icon={ThumbsUp} />
-                  <IconAction icon={ThumbsDown} />
-                  <IconAction icon={RotateCcw} />
+                </div>
+              </div>
+            ) : (
+              <div key={m.id} className="flex justify-start">
+                <div className="max-w-[85%]">
+                  {/* Name/avatar row */}
+                  <div className="mb-2 flex items-center gap-2">
+                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#C9A227]/40 bg-[#C9A227]/8">
+                      <Sparkles
+                        size={12}
+                        className="text-[#C9A227]"
+                        strokeWidth={1.75}
+                      />
+                    </div>
+                    <span className="text-[12.5px] font-medium text-[#9A9BA3]">
+                      AI
+                    </span>
+                  </div>
+
+                  <div
+                    className="
+                      prose
+                      prose-invert
+                      max-w-none
+
+                      prose-p:mb-5
+                      prose-p:leading-8
+
+                      prose-headings:mb-4
+                      prose-headings:mt-8
+
+                      prose-ul:my-5
+                      prose-ol:my-5
+
+                      prose-li:my-2
+
+                      prose-pre:my-6
+                      prose-blockquote:my-6
+                    "
+                  >
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {m.content}
+                    </ReactMarkdown>
+                  </div>
+
+                  <div className="mt-3 flex items-center gap-1 border-b border-[#1F2024] pb-5 text-[#5C5D66]">
+                    <IconAction icon={Copy} />
+                    <IconAction icon={ThumbsUp} />
+                    <IconAction icon={ThumbsDown} />
+                    <IconAction icon={RotateCcw} />
+                  </div>
                 </div>
               </div>
             ),
           )}
 
           {isLoading && (
-            <p className="text-[13.5px] text-[#5C5D66]">Thinking…</p>
+            <div className="flex justify-start">
+              <div className="flex items-center gap-2">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#C9A227]/40 bg-[#C9A227]/8">
+                  <Sparkles
+                    size={12}
+                    className="text-[#C9A227]"
+                    strokeWidth={1.75}
+                  />
+                </div>
+                <p className="text-[13.5px] text-[#5C5D66]">Thinking…</p>
+              </div>
+            </div>
           )}
 
           {/* Follow-up composer */}

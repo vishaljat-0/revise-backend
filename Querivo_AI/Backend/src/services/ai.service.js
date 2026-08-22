@@ -1,13 +1,17 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatMistralAI } from "@langchain/mistralai";
+import { createAgent } from "langchain";
 import {
   HumanMessage,
   SystemMessage,
   AIMessage,
 } from "@langchain/core/messages";
+import * as z from "zod";
+import { searchWeb } from "./tavily.service.js";
+import { tool } from "@langchain/core/tools";
 
 const model = new ChatGoogleGenerativeAI({
-model: "gemini-3.6-flash",
+  model: "gemini-2.5-flash", // verify model name
   apiKey: process.env.GOOGLE_API_KEY,
 });
 
@@ -16,29 +20,48 @@ const mistralmodel = new ChatMistralAI({
   apiKey: process.env.MISTRAL_API_KEY,
 });
 
+const searchInternetTool = tool(searchWeb, {
+  name: "searchWeb",
+  description:
+    "Search the internet for recent and factual information.",
+  schema: z.object({
+    query: z.string(),
+  }),
+});
+
+const agent = createAgent({
+  model: mistralmodel,
+  tools: [searchInternetTool],
+});
+
 export const GetMessageResponse = async (messages) => {
   const chatHistory = [
     new SystemMessage(`
-      You are a helpful and precise assistant.
+     You are a helpful assistant.
 
-      Rules:
-      - Answer clearly.
-      - If you don't know something, say so.
-      - Use previous conversation context when relevant.
+Formatting Rules:
+- Use short paragraphs.
+- Use bullet points for lists.
+- Use numbered steps for instructions.
+- Use markdown headings when needed.
+- Use code blocks for code.
+- Avoid walls of text.
     `),
 
-    ...messages.map((msg) => {
-      if (msg.role === "user") {
-        return new HumanMessage(msg.content);
-      }
-
-      return new AIMessage(msg.content);
-    }),
+    ...messages.map((msg) =>
+      msg.role === "user"
+        ? new HumanMessage(msg.content)
+        : new AIMessage(msg.content)
+    ),
   ];
 
-  const response = await model.invoke(chatHistory);
+  const response = await agent.invoke({
+    messages: chatHistory,
+  });
+ const aiMessage =
+  response.messages[response.messages.length - 1];
 
-  return response;
+return aiMessage;
 };
 
 export const generateChatTitle = async (message) => {
@@ -48,7 +71,6 @@ export const generateChatTitle = async (message) => {
 
       Rules:
       - 2 to 4 words
-      - Clear and relevant
       - No quotes
       - No punctuation
       - Return only the title
