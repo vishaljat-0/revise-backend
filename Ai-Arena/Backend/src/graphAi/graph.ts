@@ -7,7 +7,7 @@ import {
 } from "@langchain/langgraph";
 import { mistralAI, cohereAI, groqAi } from "../aiModels/aiModels.js";
 import { z } from "zod";
-import { createAgent, HumanMessage, providerStrategy,toolStrategy  } from "langchain";
+import { createAgent, HumanMessage, providerStrategy, toolStrategy } from "langchain";
 
 const State = new StateSchema({
   problem: z.string().default(""),
@@ -19,11 +19,11 @@ const State = new StateSchema({
     aiSOlution_1_score: z.number().default(0),
     aiSolution_2_score: z.number().default(0),
   }).default({
-      Response_1_review: "",
-      Response_2_review: "",
-      aiSOlution_1_score: 0,
-      aiSolution_2_score: 0,
-    }),
+    Response_1_review: "",
+    Response_2_review: "",
+    aiSOlution_1_score: 0,
+    aiSolution_2_score: 0,
+  }),
 });
 
 const solutionNode: GraphNode<typeof State> = async (state) => {
@@ -70,7 +70,7 @@ const JudgeNode: GraphNode<typeof State> = async (state) => {
     Response_2_review,
   } = judgeresponse.structuredResponse;
 
- return {
+  return {
     Judge: {
       aiSOlution_1_score,
       aiSolution_2_score,
