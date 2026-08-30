@@ -1,26 +1,19 @@
 @import "tailwindcss";
 
-/* ── Precision Arena Design System ─────────────────────────── */
-/* Stitch "Precision Arena" – Inter + JetBrains Mono, #F8F9FA bg, #2563EB accent */
-
+/* ── Dark Arena Design System ─────────────────────────────── */
 @layer base {
   *, *::before, *::after { box-sizing: border-box; }
-
   html { scroll-behavior: smooth; }
-
   body {
     font-family: 'Inter', system-ui, sans-serif;
-    background-color: #F8F9FA;
-    color: #191C1D;
-    line-height: 1.5;
+    background-color: #0F1117;
+    color: #E2E8F0;
     -webkit-font-smoothing: antialiased;
   }
-
-  /* Custom scrollbar */
   ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: #F1F5F9; }
-  ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
-  ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+  ::-webkit-scrollbar-track { background: #1A1D27; }
+  ::-webkit-scrollbar-thumb { background: #2E3244; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3E4255; }
 }
 
 /* ── Score bar animation ─────────────────────────────────── */
@@ -28,38 +21,64 @@
   from { width: 0%; }
   to   { width: var(--bar-width); }
 }
-
 .score-bar-fill {
   animation: grow-bar 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* ── Highlight.js GitHub theme override ──────────────────── */
-/* Override hljs theme colours to use our card surface */
+/* ── Syntax highlight override (dark) ───────────────────── */
 .hljs {
-  background: #F8FAFC !important;
-  color: #1E293B !important;
-  border-radius: 6px;
+  background: #13151E !important;
+  color: #CDD9E5 !important;
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.65;
+  border-radius: 6px;
 }
+.hljs-keyword, .hljs-selector-tag { color: #F97583 !important; }
+.hljs-string, .hljs-attr          { color: #9ECE6A !important; }
+.hljs-number, .hljs-literal       { color: #BB9AF7 !important; }
+.hljs-comment                     { color: #565F89 !important; font-style: italic; }
+.hljs-function, .hljs-title       { color: #7AA2F7 !important; }
+.hljs-built_in, .hljs-type        { color: #2AC3DE !important; }
+.hljs-params                      { color: #E0AF68 !important; }
 
-/* ── Markdown prose styles ───────────────────────────────── */
+/* ── Code block copy button ──────────────────────────────── */
+.code-block-wrapper { position: relative; }
+.code-copy-btn {
+  position: absolute;
+  top: 8px; right: 8px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  cursor: pointer;
+  background: #1E2130;
+  border: 1px solid #2E3244;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: #8B949E;
+  line-height: 1.5;
+}
+.code-block-wrapper:hover .code-copy-btn { opacity: 1; }
+.code-copy-btn:hover { background: #252838; color: #CDD9E5; }
+
+/* ── Markdown prose (dark) ───────────────────────────────── */
 .prose-arena {
   font-size: 14px;
-  line-height: 1.7;
-  color: #374151;
+  line-height: 1.75;
+  color: #B0BAC8;
 }
 .prose-arena h1, .prose-arena h2, .prose-arena h3 {
   font-weight: 600;
-  color: #111827;
+  color: #E2E8F0;
   margin-top: 1.25em;
   margin-bottom: 0.5em;
   line-height: 1.3;
 }
-.prose-arena h1 { font-size: 1.25rem; }
-.prose-arena h2 { font-size: 1.1rem; }
-.prose-arena h3 { font-size: 1rem; }
+.prose-arena h1 { font-size: 1.2rem; }
+.prose-arena h2 { font-size: 1.05rem; }
+.prose-arena h3 { font-size: 0.95rem; }
 .prose-arena p  { margin-bottom: 0.75em; }
 .prose-arena ul, .prose-arena ol {
   padding-left: 1.4em;
@@ -72,28 +91,25 @@
 .prose-arena code:not(pre code) {
   font-family: 'JetBrains Mono', monospace;
   font-size: 12.5px;
-  background: #EFF6FF;
-  color: #1D4ED8;
+  background: #1B1F30;
+  color: #7AA2F7;
   padding: 1px 5px;
   border-radius: 4px;
-  border: 1px solid #DBEAFE;
+  border: 1px solid #2E3244;
 }
-
 .prose-arena pre {
   margin: 0.75em 0;
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #2E3244;
 }
-
 .prose-arena blockquote {
-  border-left: 3px solid #2563EB;
+  border-left: 3px solid #3B82F6;
   padding-left: 0.875em;
   margin: 0.75em 0;
-  color: #6B7280;
+  color: #636E7F;
   font-style: italic;
 }
-
 .prose-arena table {
   width: 100%;
   border-collapse: collapse;
@@ -101,49 +117,20 @@
   margin-bottom: 0.75em;
 }
 .prose-arena th {
-  background: #F1F5F9;
+  background: #1A1D27;
   font-weight: 600;
-  color: #374151;
+  color: #CDD9E5;
   text-align: left;
   padding: 8px 12px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #2E3244;
 }
 .prose-arena td {
   padding: 7px 12px;
-  border: 1px solid #E2E8F0;
-  color: #4B5563;
+  border: 1px solid #2A2D3A;
+  color: #8B949E;
 }
-.prose-arena tr:nth-child(even) td { background: #F9FAFB; }
-
-.prose-arena a {
-  color: #2563EB;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.prose-arena a:hover { color: #1D4ED8; }
-
-.prose-arena strong { font-weight: 600; color: #111827; }
-
-/* Copy button for code blocks */
-.code-block-wrapper {
-  position: relative;
-}
-.code-copy-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  opacity: 0;
-  transition: opacity 0.15s;
-  cursor: pointer;
-  background: white;
-  border: 1px solid #E2E8F0;
-  border-radius: 4px;
-  padding: 2px 8px;
-  font-size: 11px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  color: #6B7280;
-  line-height: 1.5;
-}
-.code-block-wrapper:hover .code-copy-btn { opacity: 1; }
-.code-copy-btn:hover { background: #F8FAFC; color: #374151; }
+.prose-arena tr:nth-child(even) td { background: #13151E; }
+.prose-arena a { color: #58A6FF; text-decoration: underline; text-underline-offset: 2px; }
+.prose-arena a:hover { color: #79B8FF; }
+.prose-arena strong { font-weight: 600; color: #E2E8F0; }
+.prose-arena hr { border-color: #2E3244; margin: 1em 0; }
