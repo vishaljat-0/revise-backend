@@ -5,20 +5,22 @@ import ProblemCard from './components/ProblemCard';
 import BattleSection from './components/BattleSection';
 import JudgeSection from './components/JudgeSection';
 import InputBar from './components/InputBar';
-import { MOCK_DATA } from './data/mockData';
+import { ApiCalling,  } from './data/mockData';
 
 // ── App ────────────────────────────────────────────────────────
 // `data` starts as MOCK_DATA for demonstration.
 // Connect your backend: call your API in handleSubmit,
 // then setData(apiResponse) — the shape must match MOCK_DATA.
 export default function App() {
-  const [data, setData] = useState(MOCK_DATA);
+  const [data, setData] = useState();
 
-  const handleSubmit = (prompt) => {
-    // TODO: replace with your API call, e.g.:
-    // const response = await fetch('/api/battle', { method:'POST', body: JSON.stringify({ prompt }) });
-    // setData(await response.json());
+  const handleSubmit = async (prompt) => {
+      // const res= await  ApiCalling(prompt);
+      console.log('API response:', res.data);
+   setData(res.data);
+
     console.log('Prompt submitted:', prompt);
+      
   };
 
   return (
@@ -51,5 +53,5 @@ export default function App() {
 
       <InputBar onSubmit={handleSubmit} />
     </div>
-  );
+  );  
 }

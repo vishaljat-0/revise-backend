@@ -16,6 +16,7 @@ export default function InputBar({ onSubmit }) {
   const handleSubmit = () => {
     if (!value.trim()) return;
     onSubmit?.(value.trim());
+    setValue('');
     // Note: don't clear value — let parent decide based on API response
   };
 
@@ -40,14 +41,15 @@ export default function InputBar({ onSubmit }) {
             className="flex-1 resize-none rounded-lg border border-[#2A2D3A] bg-[#1A1D27]
               px-4 py-2.5 text-sm text-slate-200 placeholder:text-slate-600
               focus:outline-none focus:border-blue-500/70 focus:ring-2 focus:ring-blue-500/10
-              transition min-h-[42px] max-h-40 overflow-y-auto"
+              transition min-h-10.5 max-h-40 overflow-y-auto"
           />
           <button
             onClick={handleSubmit}
+
             disabled={!value.trim()}
             className="shrink-0 rounded-lg bg-blue-600 hover:bg-blue-500 active:bg-blue-700
               disabled:opacity-40 disabled:cursor-not-allowed
-              text-white text-sm font-semibold px-4 h-[42px] flex items-center gap-2
+              text-white text-sm font-semibold px-4 h-10.5 flex items-center gap-2
               transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/30"
           >
             <Send size={14} />

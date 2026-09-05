@@ -5,7 +5,7 @@ import {
   type GraphNode,
   StateGraph,
 } from "@langchain/langgraph";
-import { mistralAI, cohereAI, groqAi } from "../aiModels/aiModels.js";
+import {  cohereAI, groqAi,geminiAI } from "../aiModels/aiModels.js";
 import { z } from "zod";
 import { createAgent, HumanMessage, providerStrategy, toolStrategy } from "langchain";
 
@@ -43,7 +43,7 @@ const JudgeNode: GraphNode<typeof State> = async (state) => {
   const { problem, aiSolution_1, aiSolution_2 } = state;
 
   const judge = createAgent({
-    model: mistralAI,
+    model: geminiAI,
     responseFormat: toolStrategy(
       z.object({
         aiSOlution_1_score: z.number().min(0).max(10),
