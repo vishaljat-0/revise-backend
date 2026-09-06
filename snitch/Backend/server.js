@@ -11,7 +11,7 @@ const startServer = async () => {
     });
   } catch (error) {
     console.error("Unable to start server:", error.message);
-    process.exitCode = 1;
+    process.exitCode =1;
   }
 };
 
