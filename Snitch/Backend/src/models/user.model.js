@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
+import bcrypt from  "bcrypt"
 
 const userSchema = new mongoose.Schema({
-  fullname: {
+  fullName: {
     type: String,
     required: true,
   },

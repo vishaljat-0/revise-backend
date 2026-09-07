@@ -13,7 +13,7 @@ const genrateToken = (user, res, message) => {
     success: true,
     user: {
       id: user._id,
-      fullname: user.fullname,
+      fullName: user.fullName,
       email: user.email,
       contact: user.contact,
       role: user.role,
@@ -21,7 +21,7 @@ const genrateToken = (user, res, message) => {
   });
 };
 export const registerController = async (req, res) => {
-  const { fullname, email, contact, password, role } = req.body;
+  const { fullName, email, contact, password, isSeller } = req.body;
   try {
     const isuserexist = await userModel.findOne({
       $or: [{ email }, { contact }],
@@ -33,11 +33,11 @@ export const registerController = async (req, res) => {
     }
 
     const user = await userModel.create({
-      fullname,
+      fullName,
       email,
       contact,
       password,
-      role,
+      role:isSeller?"seller":"buyer"
     });
 
      genrateToken(user, res, "user registered successfully");

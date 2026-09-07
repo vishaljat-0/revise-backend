@@ -13,7 +13,7 @@ const validator = (req, res, next) => {
 };
 
 const validate = [
-  body("fullname")
+  body("fullName")
     .notEmpty()
     .withMessage("fullname is required")
     .isLength({ min: 3 })
@@ -37,9 +37,9 @@ const validate = [
     .isLength({ min: 6 })
     .withMessage("password must be at least 6 characters"),
 
-  body("role")
-    .notEmpty()
-    .withMessage("role is required"),
+   body("isSeller")
+        .isBoolean().withMessage("isSeller must be a boolean value"),
+    
 
   validator,
 ];
