@@ -76,3 +76,8 @@ export const registerController = async (req, res) => {
     })
   }
 };
+
+export  const googleCallbackController = async (req, res) => {
+  console.log(req.user);
+  res.send("Google callback");
+};
