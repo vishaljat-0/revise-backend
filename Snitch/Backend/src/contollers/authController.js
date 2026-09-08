@@ -1,6 +1,7 @@
 import config from "../config/config.js";
 import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 const genrateToken = (user, res, message) => {
   const token = jwt.sign({ id: user._id }, config.JWT_KEY, {
     expiresIn: "7d",
@@ -37,14 +38,41 @@ export const registerController = async (req, res) => {
       email,
       contact,
       password,
-      role:isSeller?"seller":"buyer"
+      role: isSeller ? "seller" : "buyer",
     });
 
-     genrateToken(user, res, "user registered successfully");
+    genrateToken(user, res, "user registered successfully");
   } catch (error) {
     return res.status(500).json({
       message: error.message,
       success: false,
     });
+  }
+};
+
+ export const loginController = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(401).json({
+        message: "Invalid email or password",
+        success: false,
+      });
+    }
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
+      return res.status(401).json({
+        message: "Invalid email or password",
+        success: false,
+      });
+    }
+
+    genrateToken(user,res," user login successfully")
+  } catch (error) {
+    res.status(500).json({
+      message:error.message,
+      success:false
+    })
   }
 };

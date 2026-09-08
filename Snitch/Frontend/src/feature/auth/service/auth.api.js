@@ -21,3 +21,12 @@ const base = axios.create({
 
   return response.data;
 };
+
+export const login = async ({ email, password }) => {
+  const response = await base.post("/login", {
+    email,
+    password,
+  }
+);
+  return response.data;
+};
