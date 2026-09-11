@@ -3,7 +3,7 @@ import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 const genrateToken = (user, res, message) => {
-  const token = jwt.sign({ id: user._id }, config.JWT_KEY, {
+  const token = jwt.sign({ id: user._id,role:user.role }, config.JWT_KEY, {
     expiresIn: "7d",
   });
 
@@ -50,7 +50,7 @@ export const registerController = async (req, res) => {
   }
 };
 
- export const loginController = async (req, res) => {
+export const loginController = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await userModel.findOne({ email });
@@ -68,16 +68,30 @@ export const registerController = async (req, res) => {
       });
     }
 
-    genrateToken(user,res," user login successfully")
+    genrateToken(user, res, " user login successfully");
   } catch (error) {
     res.status(500).json({
-      message:error.message,
-      success:false
-    })
+      message: error.message,
+      success: false,
+    });
   }
 };
 
-export  const googleCallbackController = async (req, res) => {
-  console.log(req.user);
-  res.send("Google callback");
+export const googleCallbackController = async (req, res) => {
+  const { displayName, emails, id } = req.user;
+ 
+  const email = emails[0].value;
+
+  let user = await userModel.findOne({ email });
+  if (!user) {
+    user = await userModel.create({
+      fullName: displayName,
+      email,
+      googleId: id,
+    });
+  }
+  const token = jwt.sign({ id: user._id, }, config.JWT_KEY, { expiresIn: "7d" });
+    res.cookie("token", token);
+
+ res.redirect("http://localhost:5173/");
 };

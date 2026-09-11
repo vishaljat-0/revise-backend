@@ -311,7 +311,10 @@ export default function Login() {
 
               {/* Continue with Gmail */}
               <button
-                type="button"
+                 type="button"
+                onClick={(e)=>{
+                  window.location.href="/api/auth/google"
+                }}
                 className="w-full border border-zinc-800 bg-zinc-900/40 hover:bg-zinc-900 hover:border-zinc-700
                   text-zinc-200 text-[12px] font-semibold tracking-[0.06em] uppercase py-3 px-4
                   flex items-center justify-center gap-2.5 transition-all duration-200 cursor-pointer"
