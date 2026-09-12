@@ -14,7 +14,7 @@ res.status(400).json({
  export const postValidation=[
 body("productName").notEmpty().withMessage("product name is required"),
 body("description").notEmpty().withMessage("description is required"),
-body("price").notEmpty().isNumeric().withMessage("price is required"),
+body("price").notEmpty().withMessage("price is required"),
 
  validator
 ]

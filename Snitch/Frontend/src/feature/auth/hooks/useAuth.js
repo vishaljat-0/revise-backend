@@ -46,6 +46,8 @@ export const useAuth = () => {
 
        dispatch(setUser(data.user));
 
+      return data.user;
+
     } catch (error) {
       console.log("Login error:", error.response?.data);
 

@@ -34,6 +34,6 @@ app.use(morgan("dev"));
 app.use(cookieParser());  
 
 app.use("/api/auth", authRouter);
-app.use("/api/addproduct",productRouter)
+app.use("/api/seller",productRouter)
 
 export default app;
